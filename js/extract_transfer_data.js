@@ -1,20 +1,48 @@
 function extractAccountData(ele) {
     const href = ele.href;
     const spanEle = ele.querySelector('span');
-    const nickName = spanEle.innerHTML;
-    const address = spanEle.getAttribute('data-original-title');
+    let accountType = CONSTANT.AccountTypeUser;
+    let nickName = spanEle.innerHTML;
+    const nickNameRegMatch = /^0x[a-fA-F0-9]{40}$/.exec(nickName);
+    if (nickNameRegMatch !== null) {
+        nickName = nickName.substr(2, 6);
+    } else {
+        accountType = CONSTANT.AccountTypeSwap;
+    }
+
+    let address = spanEle.getAttribute('data-original-title');
+    const addressRegMatch = /^0x[a-fA-F0-9]{40}$/.exec(address);
+    if (addressRegMatch === null) {
+        const addressSubstrRegMatch = /^.*\((0x[a-fA-F0-9]{40})\)$/.exec(address);
+        if (addressSubstrRegMatch !== null && addressSubstrRegMatch.length > 1) {
+            address = addressSubstrRegMatch[1];
+        }
+    }
+
     return {
-        "href": href,
-        "nickName": nickName,
-        "address": address
+        href: href,
+        nickName: nickName,
+        address: address,
+        type: accountType
     }
 }
 
 function extractValue(ele) {
-    const number = ele.innerHTML;
-    return {
-        "number": number
+    const value = {
+        number: '',
+        usd: ''
+    };
+    const valStr = ele.innerHTML.replaceAll(',','').trim();
+    const regMatch = /^[0-9]+[\.]{0,1}[0-9]*$/.exec(valStr);
+    if (regMatch !== null) {
+        value.number = new Number(valStr).toPrecision(6);
     }
+    const usdRegMatch = /^([0-9]+[\.]{0,1}[0-9]*) *\((.*)\)$/.exec(valStr);
+    if (usdRegMatch !== null && usdRegMatch.length > 2) {
+        value.number = new Number(usdRegMatch[1]).toPrecision(6);
+        value.usd = usdRegMatch[2];
+    }
+    return value;
 }
 
 function extractToken(ele) {
@@ -52,19 +80,22 @@ function extractRecordData(ele) {
     const token = extractToken(ele.lastChild);
 
     return {
-        "from": fromAccount,
-        "to": toAccount,
-        "value": value,
-        "token": token
+        'from': fromAccount,
+        'to': toAccount,
+        'value': value,
+        'token': token
     }
 }
 
 function extractTransferredRecords() {
     const wrapper = document.getElementById('wrapperContent');
+    if (wrapper === null) {
+        return null;
+    }
     const list = wrapper.querySelectorAll('li>.media-body');
     const listData = [];
     list.forEach((ele) => {
         listData.push(extractRecordData(ele));
     });
-    console.log(listData);
+    return listData;
 }

@@ -7,7 +7,10 @@
         {
             "matches": ["*://bscscan.com/tx/*"],
             "js": [
+                "js/constant.js",
                 "js/extract_transfer_data.js",
+                "lib/cytoscape.min.js",
+                "js/graph.js",
                 "js/main.js"
             ]
         }
