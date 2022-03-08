@@ -1,6 +1,20 @@
 function initContainer() {
-    const wrapper = document.getElementById('wrapperContent');
-    const wrapperPlace = wrapper.parentElement.parentElement.nextElementSibling;
+    const wrapper = getWrapper();
+    let wrapperPlace = wrapper.parentElement.parentElement;
+    while(wrapperPlace !== null) {
+        console.log(wrapperPlace);
+        const tempClass = wrapperPlace.getAttribute('class');
+        if (tempClass.indexOf('row') >= 0) {
+            break;
+        } else {
+            wrapperPlace = wrapperPlace.parentElement;
+        }
+    }
+    if (wrapperPlace === null) {
+        return;
+    } else {
+        wrapperPlace = wrapperPlace.nextElementSibling;
+    }
     const parent = wrapperPlace.parentElement;
     const container = document.createElement('div');
     container.className = 'row';
@@ -73,7 +87,10 @@ function drawGraph(data) {
                     'content': 'data(label)',
                     'shape': 'data(type)',
                     'background-color': 'data(bgColor)',
-                    'color': '#12161c'
+                    'color': '#12161c',
+                    'font-size': '10px',
+                    'width': '18px',
+                    'height': '18px'
                 })
             .selector('edge')
                 .css({
@@ -81,16 +98,18 @@ function drawGraph(data) {
                     'text-wrap': 'wrap',
                     'curve-style': 'bezier',
                     'control-point-distance': 60,
-                    'width': 2,
+                    'width': 1,
                     'target-arrow-shape': 'triangle',
                     'color':'#666',
                     'line-color': '#777',
-                    'target-arrow-color': '#777'
+                    'target-arrow-color': '#777',
+                    'font-size': '8px'
                 }),
         elements: elementsData,
         layout: {
-            name: 'circle',
-            fit: true
+            name: 'cise',
+            fit: true,
+            gravity: 1000
             //padding: 30
         }
     });

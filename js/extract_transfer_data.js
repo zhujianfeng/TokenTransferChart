@@ -88,7 +88,7 @@ function extractRecordData(ele) {
 }
 
 function extractTransferredRecords() {
-    const wrapper = document.getElementById('wrapperContent');
+    const wrapper = getWrapper();
     if (wrapper === null) {
         return null;
     }

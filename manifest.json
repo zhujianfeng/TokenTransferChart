@@ -5,11 +5,31 @@
     "description": "",
     "content_scripts": [
         {
-            "matches": ["*://bscscan.com/tx/*"],
+            "matches": [
+                "*://bscscan.com/tx/*", 
+                "*://ftmscan.com/tx/*", 
+                "*://snowtrace.io/tx/*", 
+                "*://cronos.org/explorer/tx/*", 
+                "*://andromeda-explorer.metis.io/tx/*", 
+                "*://blockscout.moonbeam.network/tx/*", 
+                "*://moonriver.moonscan.io/tx/*",
+                "*://aurorascan.dev/tx/*",
+                "*://optimistic.etherscan.io/tx/*",
+                "*://polygonscan.com/tx/*",
+                "*://arbiscan.io/tx/*",
+                "*://www.oklink.com/zh-cn/oec/tx/*",
+                "*://etherscan.io/tx/*",
+                "*://hecoinfo.com/tx/*"
+            ],
             "js": [
+                "js/util.js",
                 "js/constant.js",
                 "js/extract_transfer_data.js",
                 "lib/cytoscape.min.js",
+                "lib/layout-base.js",
+                "lib/avsdf-base.js",
+                "lib/cose-base.js",
+                "lib/cytoscape-cise.js",
                 "js/graph.js",
                 "js/main.js"
             ]
